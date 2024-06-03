@@ -48,7 +48,7 @@ class AuthController extends Controller
             'message' => 'User successfully registered',
             'access_token' => $token,
             'user' => $user,
-        ], 201);
+        ], 201)->header('Location', route('questionnaire.show', ['id' => $user->id]));
     }
 
     public function login(Request $request)

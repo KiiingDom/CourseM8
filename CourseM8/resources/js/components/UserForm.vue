@@ -5,6 +5,7 @@
     <div v-if="message" :class="['alert', message.type === 'success' ? 'alert-success' : 'alert-danger']">{{ message.text }}</div>
 
     <form id="userForm" @submit.prevent="saveUser" enctype="multipart/form-data">
+
       <div class="mb-3">
         <label for="firstName" class="form-label">First Name:</label>
         <input type="text" id="firstName" v-model="firstName" class="form-control" required>
@@ -26,8 +27,8 @@
       </div>
 
       <div class="mb-3">
-        <label for="password_confirmation" class="form-label">Confirm Password:</label>
-        <input type="password" id="password_confirmation" v-model="passwordConfirmation" class="form-control" required>
+        <label for="passwordConfirmation" class="form-label">Confirm Password:</label>
+        <input type="password" id="passwordConfirmation" v-model="passwordConfirmation" class="form-control" required>
       </div>
 
       <div class="mb-3">
@@ -41,7 +42,7 @@
       </div>
 
       <div class="mb-3">
-        <label for="studyAreas" class="form-label">Study Area:</label>
+        <label for="studyAreas" class="form-label">Study Areas:</label>
         <textarea id="studyAreas" v-model="studyAreas" class="form-control" required></textarea>
       </div>
 
@@ -54,6 +55,9 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const firstName = ref('');
 const lastName = ref('');
@@ -89,11 +93,10 @@ const saveUser = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
-      const token = data.jwt_token; // Assuming the token key is 'jwt_token' in the response
+      const token = data.access_token; // Access the token from the response
       localStorage.setItem('jwt_token', token);
       message.value = { type: 'success', text: 'User added successfully' };
-      window.location.href = '/dashboard'; // Redirect to the dashboard or any other authenticated page
+      router.push({ name: 'questionnaire', params: { id: data.user.id } }); // Navigate to the questionnaire page
     } else {
       const errorData = await response.json();
       const errorMessage = errorData.message || 'Failed to add user';
