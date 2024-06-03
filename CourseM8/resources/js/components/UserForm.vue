@@ -16,6 +16,7 @@ const saveUser = async () => {
     formData.append('firstName', firstName.value);
     formData.append('lastName', lastName.value);
     formData.append('email', email.value);
+    formData.append('password', password.value);
     formData.append('bio', bio.value);
     formData.append('age', age.value);
     formData.append('studyAreas', studyAreas.value);
@@ -74,6 +75,11 @@ const saveUser = async () => {
       </div>
 
       <div class="mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" id="password" v-model="password" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
         <label for="bio" class="form-label">Bio:</label>
         <textarea id="bio" v-model="bio" class="form-control" required></textarea>
       </div>
@@ -83,7 +89,7 @@ const saveUser = async () => {
         <input type="number" id="age" v-model="age" class="form-control" required>
       </div>
 
-      <div class="mb-3">
+      <!-- <div class="mb-3">
         <label for="cars">Choose your Country:</label><br>
 <select name="Location" id="location">
   <option value="Antigua and Barbuda">Antigua and Barbuda</option>
@@ -108,7 +114,7 @@ const saveUser = async () => {
   <option value="Afternoon">Afternoon (Sun Sparrow)</option>
   <option value="Night">Night (Night Owl)</option>
 </select class="form-control" required>
-      </div>
+      </div> -->
 
       <div class="mb-3">
         <label for="studyAreas" class="form-label">Study Area:</label>

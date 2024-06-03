@@ -59,9 +59,9 @@ function logout() {
                     <li class="nav-item">
                         <RouterLink class="nav-link" :class="{ active: $route.path === '/users/create'}" to="/users/create">Sign Up</RouterLink>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <RouterLink class="nav-link" :class="{ active: $route.path === '/courses'}" to="/courses">Courses</RouterLink>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                     <router-link v-if="!isAuthenticated" to="/login" class="nav-link">Login</router-link>
                     <button v-else @click="logout" class="btn btn-link nav-link">Logout</button>
