@@ -8,7 +8,7 @@
     <div class="container mt-5">
         <h1>Questionnaire</h1>
         <form method="POST" action="{{ route('questionnaire.store') }}">
-            @csrf
+    @csrf
             <!-- Basic Information Section -->
             <h2>Section 1: Basic Information</h2>
             <div class="form-group">
