@@ -13,6 +13,25 @@ class AuthController extends Controller
  *
  * @return \Illuminate\Http\JsonResponse
  */
+
+ public function signup() 
+ {
+    $formattedUsers = $users->map(function ($user) {
+        return [
+            'id' => $user->id,
+            'firstName' => $user->firstName,
+            'lastName' => $user->lastName,
+            'email' =>$user->email,
+            'password' =>$user->password,
+            'bio' => $user->bio,
+            'age' => $user->age,
+            'studyAreas' => $user->studyAreas,
+        ];
+    });
+
+ }
+
+ 
  public function login()
  {
  $credentials = request(['email', 'password']);
