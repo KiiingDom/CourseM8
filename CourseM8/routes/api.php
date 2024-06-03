@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -21,6 +22,8 @@ Route::post('/v1/logout', [AuthController::class, 'logout']);
 
 Route::get('/register', [AuthenticationController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [AuthenticationController::class, 'register']);
+
+Route::get('/users/{user_id}', [UserController::class, 'show']);
 
 Route::middleware(['auth'])->group(function () {
     // Matching Routes

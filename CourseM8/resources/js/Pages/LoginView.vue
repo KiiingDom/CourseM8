@@ -30,9 +30,10 @@ function login() {
     if (data.access_token) {
       // Store the token in localStorage or cookies
       localStorage.setItem('jwt_token', data.access_token);
+      localStorage.setItem('user_id', data.user_id);
       message.value = { type: 'success', text: 'Login successful! \nPlease wait to view the matches, profile and other sections.' }; // Set success message
       setTimeout(() => {
-        router.push('/users').then (() => {
+        router.push('/about').then (() => {
           window.location.reload();
         }); // Redirect after setting message
       }, 3000); // Redirect after 1 second

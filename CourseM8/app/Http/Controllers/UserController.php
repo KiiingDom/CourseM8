@@ -27,7 +27,6 @@ class UserController extends Controller
     return response()->json(['message' => 'Users retrieved successfully', 'users' => $formattedUsers]);
 }
 
-
     public function store(Request $request)
     {
         $request->validate([
@@ -48,5 +47,16 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['message' => 'User created successfully', 'data' => $user], 201);
+    }
+    
+    public function show($user_id)
+    {
+        $user = User::find($user_id);
+   
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        
+        return response()->json(['user' => $user]);
     }
 }

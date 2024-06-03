@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import AboutView from "../Pages/AboutView.vue";
 import HomeView from "../Pages/HomeView.vue";
 import AddUserView from '../Pages/AddUser.vue';
-import MoviesView from '../Pages/MoviesView.vue';
+import UserView from '../Pages/UserView.vue';
 import LoginView from '../Pages/LoginView.vue';
 
 const router = createRouter({
@@ -21,8 +21,10 @@ const router = createRouter({
             component: AddUserView
         },
         {
-            path: '/movies',
-            component: MoviesView
+            path: '/users/:user_id',
+            name: 'UserView',
+            component: UserView,
+            props: true
         },
         {
             path: '/login',
