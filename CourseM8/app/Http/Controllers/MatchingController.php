@@ -5,60 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\PairingHistory;
 
 class MatchingController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-        $matches = $this->findMatches($user);
-        return view('matching.index', compact('matches'));
+        $allUsers = User::where('id', '!=', $user->id)->get();
+        $matchingResults = [];
+
+        foreach ($allUsers as $potentialMatch) {
+            $percentage = $this->calculateMatchingPercentage($user, $potentialMatch);
+            $commonTags = $this->findCommonTags($user, $potentialMatch);
+            $matchingResults[] = [
+                'user' => $potentialMatch,
+                'percentage' => $percentage,
+                'commonTags' => $commonTags
+            ];
+        }
+
+        return response()->json($matchingResults);
     }
 
-    protected function findMatches(User $user)
+    private function calculateMatchingPercentage($user, $potentialMatch)
     {
-        $users = User::where('id', '!=', $user->id)
-            ->whereNotIn('id', PairingHistory::where('student_id', $user->id)->pluck('partner_id'))
-            ->get();
+        $totalMatches = 0;
+        $totalFields = 5; // Adjust based on the number of fields being matched
 
-        $matches = $users->map(function ($potentialMatch) use ($user) {
-            $similarity = $this->calculateTagSimilarity($user, $potentialMatch);
-            $potentialMatch->similarity = $similarity;
-            return $potentialMatch;
-        });
+        // Study Preferences
+        $userPreferences = explode(',', $user->study_preferences);
+        $matchPreferences = explode(',', $potentialMatch->study_preferences);
+        $totalMatches += count(array_intersect($userPreferences, $matchPreferences)) / count($userPreferences);
 
-        return $matches->sortByDesc('similarity');
+        // Study Locations
+        $userLocations = explode(',', $user->study_location);
+        $matchLocations = explode(',', $potentialMatch->study_location);
+        $totalMatches += count(array_intersect($userLocations, $matchLocations)) / count($userLocations);
+
+        // Note Taking
+        $userNotes = explode(',', $user->note_taking);
+        $matchNotes = explode(',', $potentialMatch->note_taking);
+        $totalMatches += count(array_intersect($userNotes, $matchNotes)) / count($userNotes);
+
+        // Review Methods
+        $userReviews = explode(',', $user->review_method);
+        $matchReviews = explode(',', $potentialMatch->review_method);
+        $totalMatches += count(array_intersect($userReviews, $matchReviews)) / count($userReviews);
+
+        // Collaboration Tools
+        $userTools = explode(',', $user->collaboration_tools);
+        $matchTools = explode(',', $potentialMatch->collaboration_tools);
+        $totalMatches += count(array_intersect($userTools, $matchTools)) / count($userTools);
+
+        // Calculate percentage match
+        $percentage = ($totalMatches / $totalFields) * 100;
+
+        return round($percentage);
     }
 
-    protected function calculateTagSimilarity(User $user1, User $user2)
+    private function findCommonTags($user, $potentialMatch)
     {
-        // Extract tags from user profiles
-        $tags1 = array_unique(explode(',', strtolower($user1->study_preferences . ',' . $user1->interests)));
-        $tags2 = array_unique(explode(',', strtolower($user2->study_preferences . ',' . $user2->interests)));
-
-        // Calculate common tags
-        $commonTags = array_intersect($tags1, $tags2);
-
-        // Calculate total unique tags
-        $totalTags = array_unique(array_merge($tags1, $tags2));
-
-        // Calculate similarity based on common tags
-        $similarity = count($commonTags) / count($totalTags) * 100;
-
-        return $similarity;
-    }
-
-    public function store(Request $request)
-    {
-        $user = Auth::user();
-        $partnerId = $request->input('partner_id');
-
-        PairingHistory::create([
-            'student_id' => $user->id,
-            'partner_id' => $partnerId,
-        ]);
-
-        return redirect()->route('matching.index')->with('success', 'Matched successfully.');
+        return [
+            'studyPreferences' => array_intersect(explode(',', $user->study_preferences), explode(',', $potentialMatch->study_preferences)),
+            'studyLocations' => array_intersect(explode(',', $user->study_location), explode(',', $potentialMatch->study_location)),
+            'noteTaking' => array_intersect(explode(',', $user->note_taking), explode(',', $potentialMatch->note_taking)),
+            'reviewMethods' => array_intersect(explode(',', $user->review_method), explode(',', $potentialMatch->review_method)),
+            'collaborationTools' => array_intersect(explode(',', $user->collaboration_tools), explode(',', $potentialMatch->collaboration_tools))
+        ];
     }
 }

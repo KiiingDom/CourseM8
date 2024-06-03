@@ -9,45 +9,32 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('firstName');
-            $table->string('lastName');            
-            $table->string('email')->unique();
-            $table->text('bio');
-            $table->text('age'); //temporary, use date later
-            $table->text('studyAreas');
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+    public function up()
+{
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
+        $table->string('firstName');
+        $table->string('lastName');
+        $table->string('email')->unique();
+        $table->string('password');
+        $table->string('bio')->nullable();
+        $table->integer('age')->nullable();
+        $table->string('studyAreas')->nullable();
+        $table->string('course')->nullable();
+        $table->string('year_of_study')->nullable();
+        $table->string('major')->nullable();
+        $table->string('career_aspirations')->nullable();
+        $table->text('study_preferences')->nullable();
+        $table->text('study_location')->nullable();
+        $table->string('study_method')->nullable();
+        $table->string('learning_style')->nullable();
+        $table->text('note_taking')->nullable();
+        $table->text('review_method')->nullable();
+        $table->string('group_size')->nullable();
+        $table->string('study_frequency')->nullable();
+        $table->text('collaboration_tools')->nullable();
+        $table->timestamps();
+    });
+}
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
-    }
 };

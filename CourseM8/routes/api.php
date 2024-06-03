@@ -47,5 +47,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
         Route::get('/feedback', [AdminController::class, 'manageFeedback'])->name('feedback.index');
         Route::delete('/feedback/{id}', [AdminController::class, 'deleteFeedback'])->name('feedback.delete');
+
+        Route::post('questionnaire/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
     });
 });

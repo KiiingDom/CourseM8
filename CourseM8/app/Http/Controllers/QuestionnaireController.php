@@ -23,26 +23,23 @@ class QuestionnaireController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
-        // Save the questionnaire responses to the user's profile or a related table
-        // Assuming you have a method to save the responses in your User model or another model
-
+    
         $user->update([
             'course' => $request->input('course'),
             'year_of_study' => $request->input('year_of_study'),
             'major' => $request->input('major'),
             'career_aspirations' => $request->input('career_aspirations'),
-            'study_preferences' => $request->input('study_preferences'),
-            'study_location' => $request->input('study_location'),
+            'study_preferences' => implode(',', $request->input('study_preferences')),
+            'study_location' => implode(',', $request->input('study_location')),
             'study_method' => $request->input('study_method'),
             'learning_style' => $request->input('learning_style'),
-            'note_taking' => $request->input('note_taking'),
-            'review_method' => $request->input('review_method'),
+            'note_taking' => implode(',', $request->input('note_taking')),
+            'review_method' => implode(',', $request->input('review_method')),
             'group_size' => $request->input('group_size'),
             'study_frequency' => $request->input('study_frequency'),
-            'collaboration_tools' => $request->input('collaboration_tools'),
+            'collaboration_tools' => implode(',', $request->input('collaboration_tools')),
         ]);
-
-        return redirect('/home')->with('success', 'Questionnaire submitted successfully.');
+    
+        return redirect()->route('matching-results')->with('success', 'Questionnaire submitted successfully.');
     }
 }
