@@ -11,12 +11,17 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protecting the Home Route with Auth Middleware
-Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('questionnaire/{id}', [QuestionnaireController::class, 'show'])->name('questionnaire.show');
-    Route::post('questionnaire', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
+    Route::post('/questionnaire', 'QuestionnaireController@store')->name('questionnaire.store');
     Route::get('matching', [MatchingController::class, 'index'])->name('matching.index');
 });
+
+// Route to return the correct URL for the store route
+Route::get('questionnaire-store-url', function () {
+    return response()->json(['url' => route('questionnaire.store')]);
+})->name('questionnaire.store.url');
 
 // Catch-all route
 Route::get('/{any?}', function () {

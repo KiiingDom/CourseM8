@@ -10,15 +10,16 @@ class QuestionnaireController extends Controller
 {
     public function show($id)
     {
-        // Ensure the user has access to this questionnaire
         $user = Auth::user();
         if ($user->id != $id) {
-            // Handle unauthorized access
             return redirect('/home');
         }
-
-        return view('questionnaire');
+    
+        $storeRoute = route('questionnaire.store');
+    
+        return view('questionnaire', compact('storeRoute'));
     }
+    
 
     public function store(Request $request)
     {
